@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{dd-MM-yyyy HH:mm:ss.SSS} %magenta([%thread]) %highlight(%-5level) %logger{36}.%M - %msg%n</pattern>
+        </encoder>
+    </appender>
+    <appender name="SAVE-TO-FILE" class="ch.qos.logback.core.FileAppender">
+		<file>applicationLog.log</file>
+		<encoder
+			class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+			<Pattern>
+				%d{dd-MM-yyyy HH:mm:ss.SSS} [%thread] %-5level %logger{36}.%M - %msg%n
+			</Pattern>
+		</encoder>
+	</appender>
+	<appender name="RollingAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>RollingLog.log</file>
+		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+			<Pattern>%d{MM:dd HH:mm:ss.SSS} [%t] [%level] [%logger{36}] - %msg%n</Pattern>
+	</encoder>
+		<rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+			<fileNamePattern>RollingLog_%d{dd-MM-yyyy}_%i.log</fileNamePattern>
+			<maxFileSize>2KB</maxFileSize>
+			<maxHistory>10</maxHistory> <!-- number of older files which will be kept in the archive before deleting the older files. -->
+			<totalSizeCap>10MB</totalSizeCap>  <!-- total size of the archived files -->
+		</rollingPolicy>
+	</appender>
+	
+	<!-- Logging custom package -->
+	<logger name="com.df.data.ingestion" level="debug" additivity="false">
+		<appender-ref ref="STDOUT"></appender-ref>
+		<appender-ref ref="SAVE-TO-FILE"></appender-ref>
+		<appender-ref ref="RollingAppender"></appender-ref>
+	</logger>
+	
+	<!-- Logging spring boot package -->
+	<logger name="org.springframework.boot" level="info" additivity="false">
+		<appender-ref ref="STDOUT"></appender-ref>
+		<appender-ref ref="SAVE-TO-FILE"></appender-ref>
+		<appender-ref ref="RollingAppender"></appender-ref>
+	</logger>
+	
+    <root level="info">
+        <appender-ref ref="STDOUT" />
+        <appender-ref ref="SAVE-TO-FILE" />
+        <appender-ref ref="RollingAppender"></appender-ref>
+    </root>
+</configuration>
